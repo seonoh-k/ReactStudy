@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { FaSquarePlus } from "react-icons/fa6";
 import TodoItem from "./todoItem";
 
@@ -9,7 +9,12 @@ type Todo = {
   isDone: boolean;
 }
 
+// TodoItem 메모이제이션 (부모 측에서 사용)
+// 컴포넌트 안에서 메모이제이션할 경우 렌더링할 때마다 메모이제이션하기 때문에 무효화 
+// const MemoizedItem = React.memo(TodoItem);
+
 export default function TodoList() {
+  console.log("Todo List Render");
   // TodoItem 배열 상태 관리
   const [ items, setItems ] = useState<Todo[]>([]);
 
@@ -49,32 +54,48 @@ export default function TodoList() {
   };
   
   // items 배열에서 자식 컴포넌트에서 전달받은 id 값을 가지는 객체의 isDone 상태를 변경
-  function onToggle(id: string) {
-    const newItems = items.map((item) => {
+  // useCallback을 사용해 함수 메모이제이션
+  const onToggle = useCallback((id: string) => {
+    // const newItems = items.map((item) => {
+    //   if(item.id === id) {
+    //     item.isDone = !item.isDone;
+    //   }
+    //   return item;
+    // })
+    setItems(prev => prev.map((item) => {
       if(item.id === id) {
-        item.isDone = !item.isDone;
+        // const newTodo = {id:item.id, text:item.text, isDone:item.isDone};
+        // const newTodo = { ...item };      
+        // newTodo.isDone = !newTodo.isDone;
+        return {...item, isDone: !item.isDone};
       }
       return item;
-    })
-    setItems(newItems);
-  };
+    }));
+  }, []);
 
   // items 배열에서 자식 컴포넌트에서 전달받은 id 값을 가지는 객체를 제거
-  function onDelete(id: string) {
-    const newItems = items.filter(item => item.id !== id);
-    setItems(newItems);
-  };
+  // useCallback을 사용해 함수 메모이제이션
+  const onDelete = useCallback((id: string) => {
+    // const newItems = items.filter(item => item.id !== id);
+    setItems(prev => prev.filter(item => item.id !== id));
+  }, []);
 
   // items 배열에서 자식 컴포넌트에서 전달받은 id 값을 가지는 객체를 수정
-  function onEdit(id: string, editText:string) {
-    const newItems = items.map((item) => {
+  // useCallback을 사용해 함수 메모이제이션
+  const onEdit = useCallback((id: string, editText:string) => {
+    // const newItems = items.map((item) => {
+    //   if(item.id === id) {
+    //     item.text = editText;
+    //   }
+    //   return item;
+    // })
+    setItems(prev => prev.map((item) => {
       if(item.id === id) {
-        item.text = editText;
+        return { ...item, text: editText};
       }
       return item;
-    })
-    setItems(newItems);
-  }
+    }));
+  }, []);
 
   return (
     <div className="flex flex-col w-full h-full text-xl items-center justify-center">

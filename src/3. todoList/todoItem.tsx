@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { FaTimes, FaPen } from "react-icons/fa";
 import Button from "./button";
 
@@ -10,27 +10,51 @@ type ItemProps = {
   onDelete: (id: string) => void;
 }
 
-export default function TodoItem({ todo, onToggle, onEdit, onDelete }: ItemProps) {
+// React.memo를 사용해 컴포넌트 메모이제이션
+export default React.memo(function TodoItem({ todo, onToggle, onEdit, onDelete }: ItemProps) {
+  console.log("Todo Item Render", todo.id);
   // 수정모드 전환용 상태
   const [ isEditing, setIsEditing ] = useState<boolean>(false);
   // 수정할 텍스트 저장
-  const [ editText, setEditText ] = useState<string>('');
+  // const [ editText, setEditText ] = useState<string>('');
+
+  // 불필요한 리렌더링을 제한하기 위해 상태에서 참조로 변경
+  const editRef = useRef<HTMLInputElement | null>(null);
 
   // 수정 모드 전환 함수
   function modeChange() {
     setIsEditing(prev => !prev);
-    setEditText(todo.text);
+    // setEditText(todo.text);
   }
 
+  // 수정 모드 진입 시 참조값 초기 설정
+  useEffect(() => {
+    if(!editRef.current) return;
+    if(isEditing == true) {
+      editRef.current.value = todo.text;
+    }
+  }, [isEditing, todo.text]);
+
   // 입력한 텍스트 저장
-  function changeText(e: React.ChangeEvent<HTMLInputElement>) {
-    setEditText(e.target.value);
-  }
+  // function changeText(e: React.ChangeEvent<HTMLInputElement>) {
+  //   setEditText(e.target.value);
+  // }
 
   // 엔터키 눌렀을 때 수정 실행 후 수정 모드 종료
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if(e.key == "Enter" && !e.nativeEvent.isComposing) {
-      onEdit(todo.id, editText);
+      // text = undefined가 되는 경우를 방지하기 위해 기본값 설정
+      // const text = editRef.current?.value ?? '';
+      // 빈 문자열이거나 공백이면 리턴
+      // if(!text.trim()) return;
+
+      // 위 코드를 다르게 작성
+      const text = (editRef.current?.value ?? '').trim();
+      if(!text) return;
+      // 새로 입력한 값에 변동이 없다면 리턴
+      if(text == todo.text) return;
+      
+      onEdit(todo.id, text);
       setIsEditing(false);
     }
   }
@@ -40,7 +64,7 @@ export default function TodoItem({ todo, onToggle, onEdit, onDelete }: ItemProps
     border border-gray-500 rounded-[5px] bg-gray-300 text-gray-700">
       {isEditing
         // 수정 모드
-      ? <input type="text" value={editText} onKeyDown={handleKeyDown} onChange={changeText}
+      ? <input type="text" ref={editRef} defaultValue={todo.text} onKeyDown={handleKeyDown}
         className="w-[480px] h-[42px] border border-gray-500 rounded-[5px] bg-white p-2 ml-2" />
         // 아이템 출력
       : <div className="flex ml-3 space-x-2">
@@ -58,4 +82,4 @@ export default function TodoItem({ todo, onToggle, onEdit, onDelete }: ItemProps
       </div>
     </div>
   )
-}
+});

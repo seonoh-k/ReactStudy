@@ -10,6 +10,7 @@ type BtnProps = {
 }
 
 export default function Button({ type, onClick }: BtnProps) {
+  console.log("Button Render", type);
 
   // 버튼 타입에 따라 다른 아이콘 출력
   function btnType(type) {
