@@ -1,21 +1,18 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
 import Button from "./button";
-
-type ItemProps = {
-  todo: Todo;
-  onToggle: (id: string) => void;
-  onEdit: (id: string, editText: string) => void;
-  onDelete: (id: string) => void;
-}
+import { useActionsContext } from "./useTodoContext";
+import type { Todo } from "./TodoContext";
 
 // React.memo를 사용해 컴포넌트 메모이제이션
-export default React.memo(function TodoItem({ todo, onToggle, onEdit, onDelete }: ItemProps) {
-  console.log("Todo Item Render", todo.id);
+export default React.memo(function TodoItem(item: Todo) {
+  console.log("item Item Render", item.id);
   // 수정모드 전환용 상태
   const [ isEditing, setIsEditing ] = useState<boolean>(false);
   // 수정할 텍스트 저장
   // const [ editText, setEditText ] = useState<string>('');
+
+  const { onToggle, onEdit, onDelete } = useActionsContext();
 
   // 불필요한 리렌더링을 제한하기 위해 상태에서 참조로 변경
   const editRef = useRef<HTMLInputElement | null>(null);
@@ -23,16 +20,16 @@ export default React.memo(function TodoItem({ todo, onToggle, onEdit, onDelete }
   // 수정 모드 전환 함수
   function modeChange() {
     setIsEditing(prev => !prev);
-    // setEditText(todo.text);
+    // setEditText(item.text);
   }
 
   // 수정 모드 진입 시 참조값 초기 설정
   useEffect(() => {
     if(!editRef.current) return;
     if(isEditing == true) {
-      editRef.current.value = todo.text;
+      editRef.current.value = item.text;
     }
-  }, [isEditing, todo.text]);
+  }, [isEditing, item.text]);
 
   // 입력한 텍스트 저장
   // function changeText(e: React.ChangeEvent<HTMLInputElement>) {
@@ -51,9 +48,9 @@ export default React.memo(function TodoItem({ todo, onToggle, onEdit, onDelete }
       const text = (editRef.current?.value ?? '').trim();
       if(!text) return;
       // 입력한 값에 변경이 없다면 리턴
-      if(text == todo.text) return;
+      if(text == item.text) return;
       
-      onEdit(todo.id, text);
+      onEdit(item.id, text);
       setIsEditing(false);
     }
   }
@@ -63,21 +60,21 @@ export default React.memo(function TodoItem({ todo, onToggle, onEdit, onDelete }
     border border-gray-500 rounded-[5px] bg-gray-300 text-gray-700">
       {isEditing
         // 수정 모드
-      ? <input type="text" ref={editRef} defaultValue={todo.text} onKeyDown={handleKeyDown}
+      ? <input type="text" ref={editRef} defaultValue={item.text} onKeyDown={handleKeyDown}
         className="w-[480px] h-[42px] border border-gray-500 rounded-[5px] bg-white p-2 ml-2" />
         // 아이템 출력
       : <div className="flex ml-3 space-x-2">
           {/* 체크박스 */}
-          <input type="checkbox" onChange={() => onToggle(todo.id)} checked={todo.isDone} className="w-7 h-7 accent-green-200" />
+          <input type="checkbox" onChange={() => onToggle(item.id)} checked={item.isDone} className="w-7 h-7 accent-green-200" />
           {/* Item */}
-          <span className={todo.isDone ? 'line-through' : ''}>{todo.text}</span>
+          <span className={item.isDone ? 'line-through' : ''}>{item.text}</span>
         </div> 
       }
       <div className="mr-2 space-x-1 mr-4 m-3">
         {/* 수정 버튼 */}
         <Button type="edit" onClick={modeChange} />
         {/* 삭제 버튼 */}
-        <Button type="delete" onClick={() => onDelete(todo.id)} />
+        <Button type="delete" onClick={() => onDelete(item.id)} />
       </div>
     </div>
   )
