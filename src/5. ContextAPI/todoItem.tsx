@@ -12,6 +12,7 @@ export default React.memo(function TodoItem(item: Todo) {
   // 수정할 텍스트 저장
   // const [ editText, setEditText ] = useState<string>('');
 
+  // 전역 상태 변경 함수
   const { onToggle, onEdit, onDelete } = useActionsContext();
 
   // 불필요한 리렌더링을 제한하기 위해 상태에서 참조로 변경
