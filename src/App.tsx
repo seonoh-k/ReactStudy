@@ -4,11 +4,18 @@
 // import Login from "./4. sideEffect/login"
 // import TodoList from "./5. ContextAPI/todoList"
 // import TodoProvider from "./5. ContextAPI/TodoProvider"
-// import { Navigate, Routes, Route } from "react-router"
+import { Navigate, Routes, Route } from "react-router"
 // import BookList from "./6. router/bookList"
 // import BookDetail from "./6. router/bookDetail"
 // import NotFound from "./6. router/notFound"
-import TodoList from "./7. asynchronousProcessing/todoList"
+// import TodoList from "./7. asynchronousProcessing/todoList"
+import Home from "./8. blog/Home"
+import Auth from "./8. blog/Auth"
+import Read from "./8. blog/Read"
+import Write from "./8. blog/Write"
+import RootLayout from "./8. blog/layouts/RootLayout"
+import AuthenticatedLayout from "./8. blog/layouts/AuthenticatedLayout"
+import UnauthenticatedLayout from "./8. blog/layouts/UnauthenticatedLayout"
 
 export default function App() {
   return (
@@ -27,7 +34,20 @@ export default function App() {
         <Route path="/books/:id" element={<BookDetail />} />
         <Route path="*" element={<NotFound />} /> */}
       {/* </Routes> */}
-      < TodoList />
+      {/* < TodoList /> */}
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route index element={<Home />} />
+          <Route element={<UnauthenticatedLayout />}>
+            <Route path="/auth" element={<Auth />} />
+          </Route>
+          <Route element={<AuthenticatedLayout />}>
+            <Route path="/write" element={<Write />} />
+          </Route>
+          <Route path="/read/:id" element={<Read />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Route>
+      </Routes>
     </>
   )
 }

@@ -12,6 +12,7 @@ export type BookInfo = {
 // 도서 리스트 배열과 도서 상세 조회 함수 타입 지정
 export type Books = {
   books: BookInfo[],
+  // 조회 함수이기 때문에 반환 타입 지정
   getDetail: (id: number) => BookInfo | undefined;
 }
 
@@ -30,7 +31,7 @@ const books = [
     {id: 11, title: '코딩 다율학습 컴퓨터 구조와 운영체제', author: '기술노트 알렉', publishYear: 2025, description: '이해하기 쉽게 체계적으로 정리한 CS 자습서'},
   ]
 
-// 상태 변경은 없기 때문에 사용하지 않는다는 표시로 _set
+// 상태 변경은 없으므로 사용하지 않기 때문에 _set
 export const useBookStore = create<Books>((_set, get) => ({
   // 도서 리스트 초기값 설정
   books: books,

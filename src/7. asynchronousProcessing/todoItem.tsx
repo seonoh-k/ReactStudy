@@ -15,7 +15,9 @@ export default React.memo(function TodoItem(item: Todo) {
   // 전역 상태 변경 함수
   // const { onToggle, onEdit, onDelete } = useActionsContext();
 
+  // 수정, 삭제는 같은 URL을 사용하기 때문에 함계 불러옴
   const { onEdit, onDelete } = useItemActions(`/todos/${item.id}`);
+  // 할 일 완료/미완료 토글
   const { onToggle } = useItemActions(`/todos/${item.id}/done`);
 
   // 불필요한 리렌더링을 제한하기 위해 상태에서 참조로 변경
