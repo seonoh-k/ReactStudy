@@ -1,7 +1,6 @@
 import PostItem from "./PostItem";
 import { usePostStore } from "../stores/postStore";
 import { useFetchPosts } from "../api/usePostAxios";
-import SamplePostItem from "./SamplePostItem";
 
 export default function PostArea() {
   const posts = usePostStore((state) => state.posts);
@@ -9,6 +8,7 @@ export default function PostArea() {
   const error = usePostStore((state) => state.error);
   const query = usePostStore((state) => state.query);
   
+  // 전체 조회 + 검색
   useFetchPosts(query);
 
   if(isLoading) return <h1>Loading ...</h1>
@@ -16,10 +16,7 @@ export default function PostArea() {
 
   return (
     <section className="posts-area">
-      {posts.length == 0
-      ? <SamplePostItem />
-      : posts.map(post => <PostItem key={post.id} {...post} />)
-      }
+      {posts && posts.map(post => <PostItem key={post.id} {...post} />)}
     </section>
   )
 }
