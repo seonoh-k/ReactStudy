@@ -6,8 +6,10 @@ import { useGetRecommandationPost } from "../api/usePostAxios";
 export default function RecommendationArea() {
   const posts = usePostStore((state) => state.posts);
   const { id } = useParams();
+
+  // 관련 게시물 불러오기
   useGetRecommandationPost(String(id));
-  
+
   return (
     <article className="page__recommend">
         <h3 className="page__recommend-title">Recommend Reading</h3>

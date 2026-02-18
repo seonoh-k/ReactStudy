@@ -6,6 +6,7 @@ export default function SearchArea() {
   const setQuery = usePostStore((state) => state.setQuery);
   const ref = useRef<HTMLInputElement>(null);
   
+  // 쿼리 세팅
   function searchPost() {
     if(!ref.current) return;
     const text = ref.current?.value;

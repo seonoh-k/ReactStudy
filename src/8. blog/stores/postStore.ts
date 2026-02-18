@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+// 게시글 타입 지정
 export type Post = {
   id: number,
   title: string,
@@ -11,11 +12,17 @@ export type Post = {
   regdate: Date,
 }
 
+// 게시글 스토어 타입 지정
 export type PostStore = {
+  // 게시글 목록
   posts: Post[],
+  // 게시글 상세 조회
   postDetail: Post | null,
+  // 검색용 쿼리 상태
   query: string,
+  // 로딩 상태
   isLoading: boolean,
+  // 에러 상태
   error: string,
   setIsLoading: (loading: boolean) => void,
   setError: (errorText: string) => void,

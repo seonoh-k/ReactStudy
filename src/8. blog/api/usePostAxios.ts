@@ -3,6 +3,7 @@ import { axiosInterface } from "./axiosInterface";
 import { usePostStore } from "../stores/postStore";
 import { useNavigate } from "react-router";
 
+// 전체 조회 + 검색
 export function useFetchPosts(query: string) {
   const setIsLoading = usePostStore((state) => state.setIsLoading);
   const setError = usePostStore((state) => state.setError);
@@ -34,6 +35,7 @@ export function useFetchPosts(query: string) {
   }, [ query, setIsLoading, setError, setPosts ])
 }
 
+// 게시물 상세 조회
 export function useGetPost(id: string) {
   const setIsLoading = usePostStore((state) => state.setIsLoading);
   const setError = usePostStore((state) => state.setError);
@@ -60,6 +62,7 @@ export function useGetPost(id: string) {
   }, [ id, setIsLoading, setError, setPostDetail ])
 }
 
+// 관련 게시물 조회
 export function useGetRecommandationPost(id: string) {
   const setIsLoading = usePostStore((state) => state.setIsLoading);
   const setError = usePostStore((state) => state.setError);
@@ -92,6 +95,7 @@ export function usePostActions() {
 
   const navigate = useNavigate();
 
+  // 게시물 생성
   function createPost(title: string, category: string, username: string, thumbnail: string, desc: string) {
     setIsLoading(true);
     const fetchData = async () => {
@@ -111,6 +115,7 @@ export function usePostActions() {
     fetchData();
   }
 
+  // 게시물 삭제
   function deletePost(id: string) {
     setIsLoading(true);
     const fetchData = async () => {

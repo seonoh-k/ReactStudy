@@ -12,6 +12,7 @@ export default function Wrtie() {
   // 게시글 추가 함수
   const { createPost } = usePostActions();
 
+  // 이미지를 Base64로 인코딩
   const encodeFileToBase64 = (image: File) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -28,6 +29,7 @@ export default function Wrtie() {
     });
   };
 
+  // 이미지 파일을 Base64로 인코딩한 결과를 string 타입으로 저장
   const handelFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = (e.target.files && e.target.files[0]) || null;
     if(!file) return;
@@ -35,7 +37,10 @@ export default function Wrtie() {
     setThumbnail(convertedFile as string);
   }
 
+  // 게시글 작성 시 서버로 전달해야하는 매개변수
   // const { title, category, thumbnail, desc, username } = req.body;
+
+  // 폼 제출시 호출
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!title || !category || !username || !thumbnail || !desc) {

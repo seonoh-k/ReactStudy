@@ -7,9 +7,13 @@ import { useAuthStore } from "../stores/authStore"
 export default function ReadArea() {
   const post = usePostStore((state) => state.postDetail);
   const { id } = useParams();
+  
+  // 게시물 상세 조회
   useGetPost(String(id));
   
+  // 게시물 삭제
   const { deletePost } = usePostActions();
+  // 유저 정보
   const user = useAuthStore((state) => state.user);
 
   if(!post) return null;
